@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">NewsApp</string>
+    <string name="news_title_nav_item">News</string>
+    <string name="fav_title_nav_item">Favorites</string>
+    <string name="content_desc_article_image">Article Image</string>
+    <string name="news_source">News Source</string>
+    <string name="add_to_favorite">Add to favorite</string>
+    <string name="share">Share</string>
+    <string name="search">Search</string>
+    <string name="search_news_hint">Search the news using a keyword</string>
+    <string name="check_out_this_news">Check out this News: %s</string>
+
+
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="fcm_message">Important Notification</string>
+</resources>
