@@ -4,10 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yousef.newsapp.database.AppDatabase
 import com.yousef.newsapp.database.NewsDao
-import com.yousef.newsapp.models.News
-import kotlinx.coroutines.GlobalScope
+import com.yousef.newsapp.models.Article
 import kotlinx.coroutines.launch
 
 class NewsDetailsViewModel(val database: NewsDao) : ViewModel() {
@@ -19,27 +17,27 @@ class NewsDetailsViewModel(val database: NewsDao) : ViewModel() {
 
 
 
-    fun addNewsToFavorites(news: News) {
+    fun addNewsToFavorites(article: Article) {
         viewModelScope.launch {
-            insertNewsToDatabase(news)
+            insertNewsToDatabase(article)
             _markedAsFavorite.value = true
         }
     }
 
 
-    fun removeNewsFromFavorites(news: News) {
+    fun removeNewsFromFavorites(article: Article) {
         viewModelScope.launch {
-            deleteNewsFromDatabase(news)
+            deleteNewsFromDatabase(article)
             _markedAsFavorite.value = false
         }
     }
 
-    private suspend fun deleteNewsFromDatabase(news: News) {
-        database.deleteNews(news)
+    private suspend fun deleteNewsFromDatabase(article: Article) {
+        database.deleteNews(article)
     }
 
-    private suspend fun insertNewsToDatabase(news: News) {
-        database.insertNews(news)
+    private suspend fun insertNewsToDatabase(article: Article) {
+        database.insertNews(article)
     }
 
 
@@ -52,7 +50,7 @@ class NewsDetailsViewModel(val database: NewsDao) : ViewModel() {
         }
     }
 
-    private suspend fun getNewsFromDatabase(publishedAt: String): News? {
+    private suspend fun getNewsFromDatabase(publishedAt: String): Article? {
         return database.get(publishedAt)
     }
 

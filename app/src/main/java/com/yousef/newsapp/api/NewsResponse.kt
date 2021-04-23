@@ -1,5 +1,5 @@
 package com.yousef.newsapp.api
 
-import com.yousef.newsapp.models.News
+import com.yousef.newsapp.models.Article
 
-class NewsResponse(val articles: List<News>)
+data class NewsResponse(val articles: List<Article>)

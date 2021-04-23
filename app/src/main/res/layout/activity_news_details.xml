@@ -8,7 +8,7 @@
 
         <variable
             name="news"
-            type="com.yousef.newsapp.models.News" />
+            type="com.yousef.newsapp.models.Article" />
         <variable
             name="activity"
             type="com.yousef.newsapp.ui.NewsDetailsActivity" />

@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @Entity
-data class News(
+data class Article(
      @PrimaryKey val publishedAt: String,
      val author: String?,
      val title: String?,

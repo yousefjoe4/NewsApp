@@ -1,5 +1,6 @@
 package com.yousef.newsapp.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yousef.newsapp.ui.adapters.NewsPagingAdapter
 import com.yousef.newsapp.databinding.FragmentNewsBinding
+import com.yousef.newsapp.models.Article
+import com.yousef.newsapp.ui.adapters.OnArticleClicked
 import com.yousef.newsapp.ui.viewmodels.NewsViewModel
 
 
@@ -22,7 +25,11 @@ class NewsFragment : Fragment() {
         val binding = FragmentNewsBinding.inflate(layoutInflater, container, false)
 
         // Init RecyclerView
-        newsAdapter = NewsPagingAdapter(activity)
+        newsAdapter = NewsPagingAdapter(object:OnArticleClicked{
+            override fun onClick(article: Article?) {
+                openArticleDetailsActivity(article)
+            }
+        })
         binding.recyclerview.apply{
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -51,6 +58,11 @@ class NewsFragment : Fragment() {
         return binding.root
     }
 
+    private fun openArticleDetailsActivity(article: Article?) {
+        val intent = Intent(requireActivity(), NewsDetailsActivity::class.java)
+        intent.putExtra(NewsDetailsActivity.NEWS_EXTRA, article)
+        requireActivity().startActivity(intent)
+    }
 
 }
 

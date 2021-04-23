@@ -7,16 +7,13 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.yousef.newsapp.R
 import com.yousef.newsapp.database.AppDatabase
 import com.yousef.newsapp.databinding.ActivityNewsDetailsBinding
-import com.yousef.newsapp.models.News
+import com.yousef.newsapp.models.Article
 import com.yousef.newsapp.ui.viewmodels.NewsDetailsViewModel
 import com.yousef.newsapp.ui.viewmodels.NewsDetailsViewModelFactory
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class NewsDetailsActivity : AppCompatActivity() {
     companion object {
@@ -26,16 +23,16 @@ class NewsDetailsActivity : AppCompatActivity() {
     private var isFavorite = false
     private lateinit var viewModel:NewsDetailsViewModel
 
-    lateinit var news: News
+    lateinit var article: Article
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
         val binding: ActivityNewsDetailsBinding =
                 DataBindingUtil.setContentView(this, R.layout.activity_news_details)
 
-        news = intent.getParcelableExtra(NEWS_EXTRA) ?: news
+        article = intent.getParcelableExtra(NEWS_EXTRA) ?: article
 
-        binding.news = news
+        binding.news = article
         binding.activity = this
 
 
@@ -43,7 +40,7 @@ class NewsDetailsActivity : AppCompatActivity() {
         val viewModelFactory = NewsDetailsViewModelFactory(database)
         viewModel = ViewModelProvider(this, viewModelFactory).get(NewsDetailsViewModel::class.java)
 
-        checkIfNewsIsFavorite(news.publishedAt)
+        checkIfNewsIsFavorite(article.publishedAt)
 
 
         viewModel.markedAsFavorite.observe(this){ markedAsFavorite ->
@@ -78,13 +75,13 @@ class NewsDetailsActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun removeNewsFromFavorites(news: News) {
-        viewModel.removeNewsFromFavorites(news)
+    private fun removeNewsFromFavorites(article: Article) {
+        viewModel.removeNewsFromFavorites(article)
     }
 
 
     private fun shareNews() {
-        val checkOutNewsText = getString(R.string.check_out_this_news, news.url)
+        val checkOutNewsText = getString(R.string.check_out_this_news, article.url)
 
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
@@ -97,8 +94,8 @@ class NewsDetailsActivity : AppCompatActivity() {
 
     }
 
-    private fun addNewsToFavorites(news: News) {
-        viewModel.addNewsToFavorites(news)
+    private fun addNewsToFavorites(article: Article) {
+        viewModel.addNewsToFavorites(article)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
@@ -123,9 +120,9 @@ class NewsDetailsActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.add_to_favorite -> {
                 if (isFavorite) {
-                    removeNewsFromFavorites(news)
+                    removeNewsFromFavorites(article)
                 } else {
-                    addNewsToFavorites(news)
+                    addNewsToFavorites(article)
                 }
                 true
             }

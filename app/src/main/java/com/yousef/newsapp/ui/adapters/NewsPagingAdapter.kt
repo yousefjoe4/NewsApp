@@ -1,22 +1,20 @@
 package com.yousef.newsapp.ui.adapters
 
-import android.content.Context
-import android.content.Intent
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.yousef.newsapp.databinding.ItemNewsBinding
-import com.yousef.newsapp.models.News
-import com.yousef.newsapp.ui.NewsDetailsActivity
+import com.yousef.newsapp.models.Article
 
-class NewsPagingAdapter(val context: Context?) :
-    PagingDataAdapter<News, NewsPagingAdapter.ViewHolder>(NEWS_COMPARATOR) {
+class NewsPagingAdapter(val onArticleClicked: OnArticleClicked) :
+    PagingDataAdapter<Article, NewsPagingAdapter.ViewHolder>(NEWS_COMPARATOR) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflater = LayoutInflater.from(context)
+        val inflater = LayoutInflater.from(parent.context)
         val binding = ItemNewsBinding.inflate(inflater, parent, false)
         return ViewHolder(binding)
     }
@@ -36,31 +34,25 @@ class NewsPagingAdapter(val context: Context?) :
         init {
             binding.root.setOnClickListener {
                 val article = getItem(layoutPosition)
-                openArticleDetailsActivity(article)
-
+                onArticleClicked.onClick(article)
             }
         }
 
-        fun bind(news: News) {
+        fun bind(article: Article) {
             // Pass the article reference to the View Object (xml item),
             // and let it handle binding the members
-            binding.news = news
+            binding.article = article
         }
 
-        private fun openArticleDetailsActivity(news: News?) {
-            val intent = Intent(context, NewsDetailsActivity::class.java)
-            intent.putExtra(NewsDetailsActivity.NEWS_EXTRA, news)
-            context?.startActivity(intent)
-        }
     }
 
     companion object {
-        private val NEWS_COMPARATOR = object : DiffUtil.ItemCallback<News>() {
-            override fun areItemsTheSame(oldItem: News, newItem: News): Boolean {
+        private val NEWS_COMPARATOR = object : DiffUtil.ItemCallback<Article>() {
+            override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
                 return oldItem.publishedAt == newItem.publishedAt
             }
 
-            override fun areContentsTheSame(oldItem: News, newItem: News): Boolean {
+            override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
                 return oldItem == newItem
             }
         }

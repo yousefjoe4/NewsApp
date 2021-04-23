@@ -1,35 +1,36 @@
 package com.yousef.newsapp.ui.adapters
 
-import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.yousef.newsapp.databinding.ItemNewsBinding
-import com.yousef.newsapp.models.News
+import com.yousef.newsapp.models.Article
 import com.yousef.newsapp.ui.NewsDetailsActivity
 
 /**
  * This adapter is used for the news coming from the database (i.e: Favorites)
  */
-class NewsAdapter(
-    private val context: Context?) : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
+class NewsAdapter(val onArticleClicked: OnArticleClicked) : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
 
-    private var news: List<News> = emptyList()
+    var articles = listOf<Article>()
+    set(value) {
+        field = value
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflater = LayoutInflater.from(context)
+        val inflater = LayoutInflater.from(parent.context)
         val binding = ItemNewsBinding.inflate(inflater, parent, false)
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(news[position])
+        holder.bind(articles[position])
     }
 
     override fun getItemCount(): Int {
-        return news.size
+        return articles.size
     }
 
     inner class ViewHolder(val binding: ItemNewsBinding) :
@@ -37,30 +38,33 @@ class NewsAdapter(
 
         init {
             binding.root.setOnClickListener {
-                val article = news[layoutPosition]
+                val article = articles[layoutPosition]
+                onArticleClicked.onClick(article)
                 openArticleDetailsActivity(article)
 
             }
         }
 
-        fun bind(news: News) {
-            binding.news = news
+//        companion object{
+//            fun from(parent: ViewGroup){
+//                val inflater = LayoutInflater.from(parent.context)
+//                val binding = ItemNewsBinding.inflate(inflater, parent, false)
+//            }
+//        }
+
+        fun bind(article: Article) {
+            binding.article = article
         }
 
-        private fun openArticleDetailsActivity(news: News?) {
-            val intent = Intent(context, NewsDetailsActivity::class.java)
-            intent.putExtra(NewsDetailsActivity.NEWS_EXTRA, news)
-            context?.startActivity(intent)
+        private fun openArticleDetailsActivity(article: Article?) {
+
+            val intent = Intent(binding.root.context, NewsDetailsActivity::class.java)
+            intent.putExtra(NewsDetailsActivity.NEWS_EXTRA, article)
+            binding.root.context.startActivity(intent)
         }
-    }
 
 
-    /**
-     * Helper Method to Update the list of data and re-populate the data in the list
-     */
-    fun setArticles(news: List<News>) {
-        Log.e("ArticlesAdapter","Received Data")
-        this.news = news
-        notifyDataSetChanged()
+
     }
+
 }

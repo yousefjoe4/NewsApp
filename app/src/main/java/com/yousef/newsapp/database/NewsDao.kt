@@ -5,19 +5,19 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.yousef.newsapp.models.News
+import com.yousef.newsapp.models.Article
 
 @Dao
 interface NewsDao {
-    @Query("SELECT * FROM news")
-    fun getAllNews(): LiveData<List<News>>
+    @Query("SELECT * FROM article")
+    fun getArticles(): LiveData<List<Article>>
 
-    @Query("SELECT * FROM news where publishedAt=:publishedAt")
-    suspend fun get(publishedAt: String): News?
+    @Query("SELECT * FROM article where publishedAt=:publishedAt")
+    suspend fun get(publishedAt: String): Article?
 
     @Insert
-    suspend fun insertNews(news: News)
+    suspend fun insertNews(article: Article)
 
     @Delete()
-    suspend fun deleteNews(news: News)
+    suspend fun deleteNews(article: Article)
 }
